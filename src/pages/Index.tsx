@@ -25,7 +25,7 @@ const GameContent = () => {
 
   return (
     <div className="min-h-dvh bg-background text-foreground">
-      <main className="container mx-auto px-4 py-6">
+      <main className="w-full min-h-screen p-0">
         {currentScreen === "start" && <HomePage />}
         {currentScreen === "category-selection" && <CategorySelection />}
         {currentScreen === "game-board" && <GameBoard />}
