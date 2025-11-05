@@ -58,21 +58,31 @@
 
 /* إعدادات الأساس العامة */
 @layer base {
-  @layer base {
-  html, body, #root {
-    height: 100%;
+  /* لارتفاع كامل الصفحة */
+  html, body, #root { height: 100%; }
+
+  /* ألوان التدرّج */
+  :root {
+    --page-start: #C0F1F7; /* الأزرق الفاتح */
+    --page-end:   #FEFCF8; /* أبيض دافئ شبه غير ملاحظ */
   }
 
+  /* خلفية عامة لكل الموقع */
   body {
-    margin: 0;                /* يمنع أي فراغات افتراضية */
-    @apply text-foreground font-tajawal;
-    direction: rtl;
-    background: linear-gradient(160deg, #C0F1F7 0%, #FEFCF8 100%);
-    background-attachment: fixed;
+    margin: 0;
+    @apply text-foreground font-tajawal antialiased;
+    background: linear-gradient(160deg, var(--page-start), var(--page-end)) fixed;
     background-size: cover;
-    overflow-x: hidden;       /* يمنع سكرول عرضي يسبب حافة */
+    overflow-x: hidden;
   }
 }
+
+@layer utilities {
+  /* يدوّي: لو بغيتي تربطين الخلفية بعنصر معيّن */
+  .page-bg {
+    background: linear-gradient(160deg, var(--page-start), var(--page-end)) fixed;
+    background-size: cover;
+  }
 }
 
 /* أدوات مخصصة */
