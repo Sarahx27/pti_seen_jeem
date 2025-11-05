@@ -18,7 +18,7 @@ const HomePage = () => {
           </p>
         </div>
 
-        <div className="w-full h-1 bg-gradient-to-r from-amber-400 to-yellow-500/70 rounded-full shadow-glow"></div>
+        
 
         <Button
           onClick={() => setCurrentScreen('category-selection')}
