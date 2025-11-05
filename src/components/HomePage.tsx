@@ -1,38 +1,26 @@
-import { Button } from '@/components/ui/button';
-import { useGame } from '@/contexts/GameContext';
-import { Sparkles } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Sparkles } from "lucide-react";
+import { useGame } from "@/contexts/GameContext";
 
-const HomePage = () => {
+export default function HomePage() {
   const { setCurrentScreen } = useGame();
 
   return (
-    <div className="min-h-[calc(100vh-64px)] gradient-primary flex flex-col items-center justify-center p-8 animate-fade-in">
-      <div className="text-center space-y-8 max-w-2xl">
-        {/* عنوان اللعبة فقط */}
-        <div className="space-y-4">
-          <h1 className="text-7xl font-black tracking-tight mb-4 animate-scale-in">
-            سين جيم
-          </h1>
-          <p className="text-xl text-foreground/80">
-            لعبة الأسئلة التقنية التنافسية
-          </p>
-        </div>
+    <div className="min-h-[calc(100dvh-3rem)] flex items-center justify-center">
+      <div className="text-center space-y-6">
+        <h1 className="text-7xl font-black tracking-tight">سين جيم</h1>
+        <p className="text-xl text-foreground/80">لعبة الأسئلة التقنية التنافسية</p>
 
-        
-
+        {/* زر البدء */}
         <Button
-          onClick={() => setCurrentScreen('category-selection')}
+          onClick={() => setCurrentScreen("category-selection")}
           size="lg"
-          className="text-xl px-12 py-8 bg-[#F2880E] hover:opacity-90 shadow-glow font-bold"
+          className="px-12 py-6 bg-accent hover:opacity-90 text-white font-bold"
         >
-          <Sparkles className="ml-2 w-6 h-6" />
+          <Sparkles className="ml-2 w-5 h-5" />
           ابدأ اللعبة
         </Button>
-
-        {/* ⚠️ حذف أي نص إضافي مثل "PTI" أو "زكاة العلم نشره" هنا */}
       </div>
     </div>
   );
-};
-
-export default HomePage;
+}
