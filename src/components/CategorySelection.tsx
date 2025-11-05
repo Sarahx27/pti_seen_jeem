@@ -31,7 +31,7 @@ const CategorySelection = () => {
   };
 
   return (
-    <div className="min-h-screen gradient-primary p-8 animate-fade-in">
+    <div className="max-w-6xl mx-auto p-8">
       <div className="max-w-6xl mx-auto space-y-8">
         <h2 className="text-4xl font-bold text-center mb-8">اختر 6 فئات للعبة</h2>
         
