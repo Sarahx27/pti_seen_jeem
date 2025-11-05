@@ -6,7 +6,7 @@
 @layer base {
   :root {
     /* الخلفية العامة */
-            /* أبيض نقي لإزالة الإطار البيج */
+    --background: 0 0% 100%;          /* أبيض نقي لإزالة الإطار البيج */
     --foreground: 210 18% 26%;        /* #36454F - رمادي مزرق */
 
     /* عناصر البطاقات */
@@ -58,17 +58,21 @@
 
 /* إعدادات الأساس العامة */
 @layer base {
-  * {
-    @apply border-border;
+  @layer base {
+  html, body, #root {
+    height: 100%;
   }
 
   body {
+    margin: 0;                /* يمنع أي فراغات افتراضية */
     @apply text-foreground font-tajawal;
-  direction: rtl;
-  background: var(--gradient-primary);
-  background-attachment: fixed;
-  background-size: cover;
-    }
+    direction: rtl;
+    background: linear-gradient(160deg, #C0F1F7 0%, #FEFCF8 100%);
+    background-attachment: fixed;
+    background-size: cover;
+    overflow-x: hidden;       /* يمنع سكرول عرضي يسبب حافة */
+  }
+}
 }
 
 /* أدوات مخصصة */
