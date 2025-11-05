@@ -63,9 +63,12 @@
   }
 
   body {
-    @apply bg-background text-foreground font-tajawal;
-    direction: rtl;
-  }
+    @apply text-foreground font-tajawal;
+  direction: rtl;
+  background: var(--gradient-primary);
+  background-attachment: fixed;
+  background-size: cover;
+    }
 }
 
 /* أدوات مخصصة */
