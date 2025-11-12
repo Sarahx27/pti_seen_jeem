@@ -1,53 +1,48 @@
-import { useGame } from '@/contexts/GameContext';
-import { Button } from '@/components/ui/button';
-import { Trophy, RotateCcw } from 'lucide-react';
+import { useGame } from "@/contexts/GameContext";
+import { Button } from "@/components/ui/button";
 
 const WinnerScreen = () => {
-  const { teams, resetGame } = useGame();
+  const { teams, winnerTeamIndex, setCurrentScreen, resetGame } = useGame();
 
-  const winner = teams.reduce((prev, current) => 
-    current.score > prev.score ? current : prev
-  );
-
-  const winnerIndex = teams.indexOf(winner);
+  const isTie = winnerTeamIndex === null;
+  const title = isTie ? "تعادل!" : `الفريق الفائز: ${teams[winnerTeamIndex!].name}`;
+  const score = isTie
+    ? `${teams[0].score} - ${teams[1].score}`
+    : `${teams[winnerTeamIndex!].score} نقطة`;
 
   return (
-    <div className="min-h-screen gradient-primary flex flex-col items-center justify-center p-8 animate-fade-in">
-      <div className="text-center space-y-8 max-w-2xl">
-        <Trophy className="w-32 h-32 mx-auto animate-pulse-glow" style={{ color: winnerIndex === 0 ? 'hsl(var(--team1))' : 'hsl(var(--team2))' }} />
-        
-        <div className="space-y-4">
-          <h1 className="text-6xl font-black animate-scale-in">
-            🎉 مبروك! 🎉
-          </h1>
-          <h2 className="text-4xl font-bold" style={{ color: winnerIndex === 0 ? 'hsl(var(--team1))' : 'hsl(var(--team2))' }}>
-            {winner.name}
-          </h2>
-          <p className="text-3xl">فاز باللعبة!</p>
-        </div>
+    <div className="min-h-screen page-bg p-8 flex items-center justify-center">
+      <div className="w-full max-w-3xl mx-auto space-y-8 text-center">
+        <h1 className="text-4xl md:text-5xl font-extrabold">{title}</h1>
 
-        <div className="bg-card rounded-lg p-8 space-y-4">
-          <h3 className="text-2xl font-bold">النتيجة النهائية</h3>
-          <div className="grid grid-cols-2 gap-4">
-            {teams.map((team, index) => (
-              <div key={index} className="p-4 rounded-lg bg-muted">
-                <div className="font-bold mb-2" style={{ color: index === 0 ? 'hsl(var(--team1))' : 'hsl(var(--team2))' }}>
-                  {team.name}
-                </div>
-                <div className="text-3xl font-black">{team.score}</div>
-              </div>
-            ))}
+        <div className="bg-card rounded-3xl p-10 md:p-14 shadow-lg">
+          <div className="text-2xl md:text-3xl mb-6">
+            {isTie ? "المباراة انتهت بتعادل." : "مبروك!"}
+          </div>
+
+          <div className="text-3xl md:text-4xl font-bold">{score}</div>
+
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            <Button variant="secondary" onClick={() => setCurrentScreen("game-board")}>
+              الرجوع للوحة اللعبة
+            </Button>
+            <Button onClick={resetGame}>بدء لعبة جديدة</Button>
           </div>
         </div>
 
-        <Button
-          onClick={resetGame}
-          size="lg"
-          className="text-xl px-12 py-8 bg-accent hover:bg-accent/90 shadow-glow font-bold"
-        >
-          <RotateCcw className="ml-2 w-6 h-6" />
-          العب مرة أخرى
-        </Button>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {teams.map((t, i) => (
+            <div key={i} className="bg-white rounded-xl p-6 shadow-sm">
+              <div
+                className="text-xl font-bold mb-2"
+                style={{ color: i === 0 ? "hsl(var(--team1))" : "hsl(var(--team2))" }}
+              >
+                {t.name}
+              </div>
+              <div className="text-3xl font-extrabold tabular-nums">{t.score}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

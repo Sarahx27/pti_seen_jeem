@@ -27,7 +27,8 @@ const GameContent = () => {
 
   return (
     <div className="min-h-screen w-full text-foreground page-bg">
-      <main className="w-full min-h-screen flex flex-col items-center justify-center px-4 py-6">
+      <main className="w-full min-h-screen flex flex-col items-center justify-start px-4 py-2 mt-2">
+
         {currentScreen === "start" && <HomePage />}
         {currentScreen === "category-selection" && <CategorySelection />}
         {currentScreen === "game-board" && <GameBoard />}

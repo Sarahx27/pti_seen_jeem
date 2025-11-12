@@ -22,9 +22,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onClose }) => {
 
   const [password, setPassword] = useState("");
   const [authed, setAuthed] = useState(false);
-  const [activeCatId, setActiveCatId] = useState<number | null>(
-    allCategories.length ? allCategories[0].id : null
-  );
+  const [activeCatId, setActiveCatId] = useState<number | null>(null);
 
   // --- Auth ---
   const handleLogin = () => {
@@ -87,8 +85,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onClose }) => {
     if (!window.confirm("متأكدة من حذف الفئة؟")) return;
     setAllCategories((prev) => prev.filter((c) => c.id !== id));
     setSelectedCategories((prev) => prev.filter((c) => c.id !== id));
-    const remaining = allCategories.filter((c) => c.id !== id);
-    setActiveCatId(remaining.length ? remaining[0].id : null);
+    setActiveCatId((prevActiveId) => (prevActiveId === id ? null : prevActiveId));
   };
 
   const addQuestion = () => {
@@ -361,4 +358,3 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onClose }) => {
 };
 
 export default AdminPanel;
-

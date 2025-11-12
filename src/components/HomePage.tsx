@@ -9,8 +9,7 @@ export default function HomePage() {
     <div className="min-h-[calc(100dvh-3rem)] flex items-center justify-center">
       <div className="text-center space-y-6">
         <h1 className="text-7xl font-black tracking-tight">سين جيم</h1>
-        <p className="text-xl text-foreground/80">لعبة الأسئلة التقنية التنافسية</p>
-
+        
         {/* زر البدء */}
         <Button
           onClick={() => setCurrentScreen("category-selection")}

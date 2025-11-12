@@ -1,96 +1,106 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useGame } from '@/contexts/GameContext';
-import { Category } from '@/data/gameData';
-import { Check } from 'lucide-react';
+import React, { useMemo } from "react";
+import { useGame } from "@/contexts/GameContext";
+import { Button } from "@/components/ui/button";
 
-const CategorySelection = () => {
-  const { allCategories, setSelectedCategories, setCurrentScreen, teams, setTeams } = useGame();
-  const [selected, setSelected] = useState<number[]>([]);
-  const [teamNames, setTeamNames] = useState({ team1: teams[0].name, team2: teams[1].name });
+const CategorySelection: React.FC = () => {
+  const {
+    allCategories,
+    selectedCategories,
+    setSelectedCategories,
+    teams,
+    setTeams,
+    setCurrentScreen,
+  } = useGame();
 
-  const toggleCategory = (categoryId: number) => {
-    if (selected.includes(categoryId)) {
-      setSelected(selected.filter(id => id !== categoryId));
-    } else if (selected.length < 6) {
-      setSelected([...selected, categoryId]);
+  // هل مختارة 6 بالضبط؟
+  const canStart = selectedCategories.length === 6;
+
+  // اختيار/إلغاء اختيار فئة (حتى 6 فقط)
+  const toggleCategory = (catId: number) => {
+    const isSelected = selectedCategories.some((c) => c.id === catId);
+    if (isSelected) {
+      setSelectedCategories(selectedCategories.filter((c) => c.id !== catId));
+    } else {
+      if (selectedCategories.length >= 6) return; // لا تتعدى 6
+      const cat = allCategories.find((c) => c.id === catId);
+      if (cat) setSelectedCategories([...selectedCategories, cat]);
     }
   };
 
-  const handleStart = () => {
-    const selectedCats = allCategories.filter(cat => selected.includes(cat.id));
-    setSelectedCategories(selectedCats);
-    
-    const newTeams = [...teams];
-    newTeams[0] = { ...newTeams[0], name: teamNames.team1 };
-    newTeams[1] = { ...newTeams[1], name: teamNames.team2 };
-    setTeams(newTeams);
-    
-    setCurrentScreen('game-board');
-  };
+  // شبكة فئات مرنة:
+  // sm: 2 أعمدة، md: 3، lg: 4، xl: 5 (هذا يلبي شرط 18 => 5x4 تقريباً)
+  const gridClasses =
+    "grid gap-4 justify-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5";
+
+  // للمساعدة: ids المختارة
+  const selectedIds = useMemo(
+    () => new Set(selectedCategories.map((c) => c.id)),
+    [selectedCategories]
+  );
 
   return (
-    <div className="max-w-6xl mx-auto p-8">
-      <div className="max-w-6xl mx-auto space-y-8">
-        <h2 className="text-4xl font-bold text-center mb-8">اختر 6 فئات للعبة</h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          {allCategories.map((category: Category) => (
-            <button
-              key={category.id}
-              onClick={() => toggleCategory(category.id)}
-              disabled={!selected.includes(category.id) && selected.length >= 6}
-              className={`
-                relative p-6 rounded-lg font-bold text-lg transition-all duration-300
-                ${selected.includes(category.id)
-                  ? 'bg-accent text-foreground shadow-glow scale-105'
-                  : 'bg-card hover:bg-card/80 text-foreground/80'}
-                ${!selected.includes(category.id) && selected.length >= 6 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-              `}
-            >
-              {selected.includes(category.id) && (
-                <div className="absolute top-2 left-2 w-6 h-6 bg-foreground rounded-full flex items-center justify-center">
-                  <Check className="w-4 h-4 text-accent" />
-                </div>
-              )}
-              {category.name}
-            </button>
-          ))}
+    <div className="w-full">
+      <div className="max-w-6xl mx-auto p-6">
+        {/* العنوان */}
+        <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-10">
+          اختر 6 فئات للعبة
+        </h1>
+
+        {/* شبكة الفئات */}
+        <div className={gridClasses}>
+          {allCategories.map((category) => {
+            const active = selectedIds.has(category.id);
+            return (
+              <button
+                key={category.id}
+                onClick={() => toggleCategory(category.id)}
+                className={[
+                  "px-6 py-4 rounded-xl font-bold text-lg transition duration-300 transform",
+                  "min-w-[180px] text-center shadow-sm hover:shadow-md",
+                  active
+                    ? "bg-accent text-white shadow-glow scale-105"
+                     : "bg-white/70 border border-accent/20 text-foreground/80 hover:bg-accent/10 hover:scale-105 backdrop-blur-sm",
+                ].join(" ")}
+
+              >
+                {category.image ? <img src={category.image} alt="" className="mx-auto mb-2 h-16 object-contain" /> : null}{category.name}
+              </button>
+            );
+          })}
         </div>
 
-        <div className="bg-card rounded-lg p-6 space-y-4">
-          <h3 className="text-2xl font-bold mb-4">أسماء الفرق</h3>
+        {/* أسماء الفرق */}
+        <div className="mt-12 space-y-4">
+          <h2 className="text-2xl font-bold text-center mb-4">أسماء الفرق</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm mb-2 text-foreground/80">الفريق الأول</label>
-              <Input
-                value={teamNames.team1}
-                onChange={(e) => setTeamNames({ ...teamNames, team1: e.target.value })}
-                className="text-right"
-                placeholder="اسم الفريق الأول"
-              />
-            </div>
-            <div>
-              <label className="block text-sm mb-2 text-foreground/80">الفريق الثاني</label>
-              <Input
-                value={teamNames.team2}
-                onChange={(e) => setTeamNames({ ...teamNames, team2: e.target.value })}
-                className="text-right"
-                placeholder="اسم الفريق الثاني"
-              />
-            </div>
+            {teams.map((team, i) => (
+              <div key={i} className="bg-transparent p-0">
+                <label className="block text-sm text-foreground/70 mb-2">
+                  {i === 0 ? "الفريق الأول" : "الفريق الثاني"}
+                </label>
+                <input
+                  className="w-full rounded-xl border border-accent/30 bg-white/80 px-4 py-3 outline-none focus-visible:ring-4 focus-visible:ring-primary/30"
+                  value={team.name}
+                  onChange={(e) => {
+                    const copy = [...teams];
+                    copy[i] = { ...copy[i], name: e.target.value };
+                    setTeams(copy);
+                  }}
+                  placeholder={i === 0 ? "الفريق 1" : "الفريق 2"}
+                />
+              </div>
+            ))}
           </div>
         </div>
 
-        <div className="text-center">
+        {/* زر البدء */}
+        <div className="mt-10 flex items-center justify-center">
           <Button
-            onClick={handleStart}
-            disabled={selected.length !== 6 || !teamNames.team1.trim() || !teamNames.team2.trim()}
-            size="lg"
-            className="px-12 py-6 text-xl font-bold bg-accent hover:bg-accent/90 shadow-glow disabled:opacity-50"
+            disabled={!canStart}
+            onClick={() => setCurrentScreen("game-board")}
+            className="px-12 py-6 text-xl font-bold bg-gradient-to-r from-[#F2880E] via-[#D4AE53] to-[#357738] text-white rounded-2xl hover:opacity-90 disabled:opacity-50 transition shadow-glow"
           >
-            ابدأ اللعب ({selected.length}/6)
+            ابدأ اللعب ({selectedCategories.length}/6)
           </Button>
         </div>
       </div>
